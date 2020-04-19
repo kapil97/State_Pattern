@@ -1,0 +1,9 @@
+basic:householdItem
+basic:medicine
+basic:food
+moderatelyExpensive:cinema
+moderatelyExpensive:automobile
+moderatelyExpensive:vacationTrip
+superExpensive:yacht
+superExpensive:privateJet
+superExpensive:island

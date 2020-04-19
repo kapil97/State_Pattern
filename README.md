@@ -34,9 +34,10 @@ Description: Compiles your code and generates .class files inside the BUILD fold
 
 ```commandline
 ant run -buildfile statePlay/src/build.xml \
--DinputNumStream="<input file path>" \
+-DinputFile="<input file path>" \
+-DbaseFile="<base file path>" \
 -DrunAvgWindowSize="<size of the window for running average calculations>" \
--DoutputNumStream="<output file path to which running averages are written>" \
+-DoutputFile="<output file path to which running averages are written>" \
 ```
 
 -----------------------------------------------------------------------
