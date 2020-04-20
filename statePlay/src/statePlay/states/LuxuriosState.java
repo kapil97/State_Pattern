@@ -1,4 +1,8 @@
 package statePlay.states;
 
-public class LuxuriosState {
+public class LuxuriosState implements BudgetStateI{
+    @Override
+    public BudgetStateI purchase(String item) {
+        return null;
+    }
 }

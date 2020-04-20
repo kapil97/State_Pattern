@@ -46,8 +46,8 @@
 
 <target name="run" depends="jar">
         <java jar="${BUILD}/jar/statePlay.jar"  fork="true">
-	        <arg value="${inputFile}"/> <!-- input file -->
             <arg value="${baseFile}"/> <!-- base file -->
+	        <arg value="${inputFile}"/> <!-- input file -->
 	        <arg value="${runAvgWindowSize}"/> <!-- window size of the running average calculator. -->
 	        <arg value="${outputFile}"/> <!-- output file to which running averages are written. -->
         </java>	
