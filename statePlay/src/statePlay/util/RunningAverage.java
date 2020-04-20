@@ -6,20 +6,19 @@ import java.util.ArrayList;
  * Calculates running average
  */
 public class RunningAverage implements RunningAverageI {
-    String runAvgResultFile;
     String windowSize;
     int windowSizeInt;
     static double currentAverage;
     ArrayList<Double> currWindow=new ArrayList<>();
 
+
+    public RunningAverage(){}
     /**
      * Constructor for RunningAverage
      * @param windowSizeIn
-     * @param runningAvgFile
      */
-    public RunningAverage(String windowSizeIn,String runningAvgFile){
+    public RunningAverage(String windowSizeIn){
        windowSize=windowSizeIn;
-       runAvgResultFile =runningAvgFile;
     }
 
     /**

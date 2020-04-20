@@ -4,6 +4,9 @@ import statePlay.states.BudgetStateI;
 import statePlay.states.ContextState;
 import statePlay.util.FileProcessor;
 import statePlay.util.FileProcessorI;
+import statePlay.util.RunningAverage;
+import statePlay.util.RunningAverageI;
+
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 
@@ -31,12 +34,11 @@ public class Driver {
 			System.exit(0);
 		}
 		ContextState contextState= new ContextState();
-
+		RunningAverageI runningAverage=new RunningAverage(args[2]);
 
 		try {
 			FileProcessorI fileProcessor=new FileProcessor(args[0]);
 			String line= fileProcessor.poll();
-			//contextState.insertCategories(line);
 			while (line != null) {
 				contextState.categorizeItems(line);
 				line = fileProcessor.poll();
@@ -48,6 +50,26 @@ public class Driver {
 			e.printStackTrace();
 		}
 		contextState.printList();
+
+		try {
+			FileProcessorI fileProcessor=new FileProcessor(args[1]);
+			String line= fileProcessor.poll();
+			//contextState.insertCategories(line);
+			while (line != null) {
+				if(line.contains("money")){
+					int index=line.indexOf(':');
+					String money=line.substring(index+1);
+					double moneyValue=Double.parseDouble(money);
+					runningAverage.update(moneyValue);
+				}
+				else contextState.purchaseActionPerformed(line);
+				line = fileProcessor.poll();
+			}
+			fileProcessor.close();
+
+		} catch (IOException | InvalidPathException e) {
+			e.printStackTrace();
+		}
 
 	}
 	@Override
