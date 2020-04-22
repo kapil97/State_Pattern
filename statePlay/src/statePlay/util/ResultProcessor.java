@@ -12,15 +12,27 @@ public class ResultProcessor implements ResultProcessorI {
         outputFilename=outputFilenameIn;
     }
    static List<String> outputList =new ArrayList<>();
+
+    /**
+     * Add data to Result List
+     * @param output
+     */
     @Override
     public void addToResultList(String output) {
         outputList.add(output);
     }
+
+    /**
+     * Print Result List
+     */
     @Override
     public void printList(){
         System.out.println(outputList);
     }
 
+    /**
+     * Write to output file method
+     */
     @Override
     public void writeToFile() {
         try {
@@ -47,5 +59,9 @@ public class ResultProcessor implements ResultProcessorI {
         finally {
             System.out.println("Process Complete");
         }
+    }
+    @Override
+    public String toString(){
+        return "ResultProcessor";
     }
 }

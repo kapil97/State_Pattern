@@ -2,6 +2,7 @@ package statePlay.driver;
 
 import statePlay.states.BudgetStateI;
 import statePlay.states.ContextState;
+import statePlay.states.ContextStateI;
 import statePlay.util.*;
 
 import java.io.IOException;
@@ -30,50 +31,91 @@ public class Driver {
 			System.err.printf("Error: Incorrect number of arguments. Program accepts %d arguments. Provided: %d " , REQUIRED_NUMBER_OF_ARGS, args.length );
 			System.exit(0);
 		}
-		ContextState contextState= new ContextState();
-		RunningAverageI runningAverage=new RunningAverage(args[2]);
 
-		try {
-			FileProcessorI fileProcessor=new FileProcessor(args[0]);
-			String line= fileProcessor.poll();
-			while (line != null) {
-				contextState.categorizeItems(line);
-				line = fileProcessor.poll();
+		ValidatorI validator=new Validator(args[0],args[1],args[2]);
+		if(validator.valid()) {
+			ContextStateI contextState = new ContextState();
+			BudgetStateI budgetState=new ContextState();
 
-			}
-			fileProcessor.close();
+			RunningAverageI runningAverage = new RunningAverage(args[2]);
+			/**
+			 * Processing Available item file.
+			 */
+			try {
+				FileProcessorI fileProcessor = new FileProcessor(args[0]);
+				String line = fileProcessor.poll();
+				while (line != null) {
+					contextState.categorizeItems(line);
+					line = fileProcessor.poll();
 
-		} catch (IOException | InvalidPathException e) {
-			e.printStackTrace();
-		}
-		contextState.printList();
-
-		try {
-			FileProcessorI fileProcessor=new FileProcessor(args[1]);
-			String line= fileProcessor.poll();
-			//contextState.insertCategories(line);
-			while (line != null) {
-				if(line.contains("money")){
-					int index=line.indexOf(':');
-					String money=line.substring(index+1);
-					double moneyValue=Double.parseDouble(money);
-					runningAverage.update(moneyValue);
 				}
-				else contextState.purchaseActionPerformed(line);
-				line = fileProcessor.poll();
-			}
-			fileProcessor.close();
+				fileProcessor.close();
 
-		} catch (IOException | InvalidPathException e) {
-			e.printStackTrace();
+			} catch (IOException | InvalidPathException e) {
+				e.printStackTrace();
+			}
+
+			/**
+			 * Processing Input File.
+			 */
+			try {
+				FileProcessorI fileProcessor = new FileProcessor(args[1]);
+				String line = fileProcessor.poll();
+				while (line != null) {
+					String finalLine = line;
+					ValidatorI formatValidator=new ValidatorI() {
+						boolean isValid;
+						@Override
+						public boolean valid() {
+							if(finalLine.contains("item:")) {
+								isValid=true;
+							}
+							else isValid= finalLine.contains("money:");
+							return isValid;
+						}
+
+					};
+					if(formatValidator.valid()) {
+						if (line.contains("money")) {
+							int index = line.indexOf(':');
+							String money = line.substring(index + 1);
+							double moneyValue = Double.parseDouble(money);
+							ValidatorI moneyValidator = new ValidatorI() {
+								@Override
+								public boolean valid() {
+									if (moneyValue <= 0) {
+										System.out.println("Money earned cannot be negative or Zero");
+										return false;
+									}
+									return true;
+								}
+							};
+							if (moneyValidator.valid())
+								runningAverage.update(moneyValue);
+							else return;
+						}
+						else budgetState.purchaseActionPerformed(line);
+					}
+					else {
+						System.out.println("Incorrect Format. Format must be either item:<item name> or money:<money>");
+						System.exit(0);
+					}
+					line = fileProcessor.poll();
+				}
+				fileProcessor.close();
+
+			} catch (IOException | InvalidPathException e) {
+				e.printStackTrace();
+			}
+
+			ResultProcessorI resultProcessor = new ResultProcessor(args[3]);
+			resultProcessor.writeToFile();
 		}
-		ResultProcessorI resultProcessor=new ResultProcessor(args[3]);
-		resultProcessor.printList();
-		resultProcessor.writeToFile();
+		else System.exit(0);
 	}
 	@Override
 	public String toString(){
-		String returnValue="Main Class";
+		String returnValue="Driver";
 		return returnValue;
 	}
 }

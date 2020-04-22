@@ -12,6 +12,11 @@ public class ExtravagantState implements BudgetStateI {
     public ExtravagantState(Map<String, List<String>> dataListIn){
         dataList=dataListIn;
     }
+    /**
+     * Purchase Action on the current item
+     * @param item
+     * @return currentState (Constructor of Context State);
+     */
     @Override
     public BudgetStateI purchaseActionPerformed(String item) {
         RunningAverageI runningAverage=new RunningAverage();
@@ -30,6 +35,12 @@ public class ExtravagantState implements BudgetStateI {
 
         return new ContextState(nextState,isPurchased);
     }
+    /**
+     * Private method to check if item is purchasable
+     * @param item
+     * @param money
+     * @return boolean of if purchasable
+     */
     private boolean checkPurchasable(String item,double money){
         String category=getCategory(money);
         boolean found=false;
@@ -55,9 +66,14 @@ public class ExtravagantState implements BudgetStateI {
                 }
             }
         }
-        System.out.println("item: " + item + " Category: " + category + " return value: " + found);
+        System.out.println("item: " + item + " Category: " + category + " Purchasable: " + found);
         return found;
     }
+    /**
+     * Private method to access the category of the item
+     * @param money
+     * @return String: Category
+     */
     private String getCategory(double money){
         if(10000>money){
             return "basic";
@@ -67,5 +83,10 @@ public class ExtravagantState implements BudgetStateI {
         }
         else
             return "superExpensive";
+    }
+    @Override
+    public String toString(){
+        return "ExtravagantState";
+
     }
 }
