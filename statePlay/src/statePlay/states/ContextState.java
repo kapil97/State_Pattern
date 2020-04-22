@@ -1,23 +1,25 @@
 package statePlay.states;
-
-import statePlay.util.RunningAverage;
-import statePlay.util.RunningAverageI;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ContextState{
+public class ContextState implements BudgetStateI, ContextStateI{
 
     BudgetStateI currentState;
     boolean isPurchased;
-    public ContextState(){}
+
+    public ContextState(){
+    currentState=new BasicState();
+    }
+
     public ContextState(BudgetStateI currentStateIn, boolean isPurchasedIn){
         currentState=currentStateIn;
         isPurchased=isPurchasedIn;
     }
     static Map<String, List<String>> categorizedItems=new HashMap<>();
+
+    @Override
     public void categorizeItems(String line){
 
         int index=line.indexOf(':');
@@ -38,19 +40,44 @@ public class ContextState{
             System.out.println("Item category must be either basic, moderately expensive or super expensive only");
         }
     }
+
+    @Override
     public BudgetStateI purchaseActionPerformed(String line){
-        System.out.println("Line: "+line);
-        RunningAverageI runningAverage=new RunningAverage();
-        double current_value=runningAverage.getAverage();
-        System.out.println("Running Average: "+current_value);
+        int index=line.indexOf(':');
+        String item=line.substring(index+1);
+        System.out.println();
+        System.out.println("item: "+item);
+        BudgetStateI basicState=new BasicState(categorizedItems);
+        ContextState innerState=null;
+        innerState= (ContextState) basicState.purchaseActionPerformed(item);
+        currentState=innerState.currentState;
+        isPurchased=innerState.isPurchased;
+        System.out.println("InnerState CurrentState: "+ currentState+"InnerState Boolean Value: "+isPurchased);
+        String className=getClassName(currentState);
+//        Class cls=currentState.getClass();
+//        className=cls.getName();
+        System.out.println("ClassName: "+className);
+//        RunningAverageI runningAverage=new RunningAverage();
+//        double current_value=runningAverage.getAverage();
+//        System.out.println("Running Average: "+current_value);
         return null;
     }
+    private String getClassName(BudgetStateI currentState){
+        if(currentState.toString().contains("BasicState"))
+            return "BASIC";
+        else if(currentState.toString().contains("LuxuriousState"))
+            return "LUXURIOUS";
+        else return "EXTRAVAGANT";
+    }
+    @Override
     public void addToCategory(String category,String item) {
         if (!categorizedItems.containsKey(category)) {
             categorizedItems.put(category, new ArrayList<>());
         }
         categorizedItems.get(category).add(item);
     }
+
+    @Override
     public void printList(){
         System.out.println(categorizedItems);
     }
