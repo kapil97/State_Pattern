@@ -47,19 +47,16 @@ public class ContextState implements BudgetStateI, ContextStateI{
         String item=line.substring(index+1);
         System.out.println();
         System.out.println("item: "+item);
-        BudgetStateI basicState=new BasicState(categorizedItems);
-        ContextState innerState=null;
-        innerState= (ContextState) basicState.purchaseActionPerformed(item);
+        new BasicState(categorizedItems);
+        new LuxuriousState(categorizedItems);
+        new Extravagant(categorizedItems);
+        ContextState innerState;
+        innerState= (ContextState) currentState.purchaseActionPerformed(item);
         currentState=innerState.currentState;
         isPurchased=innerState.isPurchased;
         System.out.println("InnerState CurrentState: "+ currentState+"InnerState Boolean Value: "+isPurchased);
         String className=getClassName(currentState);
-//        Class cls=currentState.getClass();
-//        className=cls.getName();
         System.out.println("ClassName: "+className);
-//        RunningAverageI runningAverage=new RunningAverage();
-//        double current_value=runningAverage.getAverage();
-//        System.out.println("Running Average: "+current_value);
         return null;
     }
     private String getClassName(BudgetStateI currentState){
