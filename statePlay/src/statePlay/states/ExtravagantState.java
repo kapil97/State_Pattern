@@ -6,10 +6,10 @@ import statePlay.util.RunningAverageI;
 import java.util.List;
 import java.util.Map;
 
-public class Extravagant implements BudgetStateI {
+public class ExtravagantState implements BudgetStateI {
     Map<String, List<String>> dataList;
-    public Extravagant(){}
-    public Extravagant(Map<String, List<String>> dataListIn){
+    public ExtravagantState(){}
+    public ExtravagantState(Map<String, List<String>> dataListIn){
         dataList=dataListIn;
     }
     @Override
@@ -26,7 +26,7 @@ public class Extravagant implements BudgetStateI {
             nextState=new LuxuriousState();
         }
         else
-            nextState=new Extravagant();
+            nextState=new ExtravagantState();
 
         return new ContextState(nextState,isPurchased);
     }

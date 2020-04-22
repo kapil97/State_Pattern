@@ -29,7 +29,7 @@ public class LuxuriousState implements BudgetStateI{
             nextState=new LuxuriousState();
         }
         else
-            nextState=new Extravagant();
+            nextState=new ExtravagantState();
 
         return new ContextState(nextState,isPurchased);
     }

@@ -2,10 +2,7 @@ package statePlay.driver;
 
 import statePlay.states.BudgetStateI;
 import statePlay.states.ContextState;
-import statePlay.util.FileProcessor;
-import statePlay.util.FileProcessorI;
-import statePlay.util.RunningAverage;
-import statePlay.util.RunningAverageI;
+import statePlay.util.*;
 
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
@@ -70,7 +67,9 @@ public class Driver {
 		} catch (IOException | InvalidPathException e) {
 			e.printStackTrace();
 		}
-
+		ResultProcessorI resultProcessor=new ResultProcessor(args[3]);
+		resultProcessor.printList();
+		resultProcessor.writeToFile();
 	}
 	@Override
 	public String toString(){

@@ -1,4 +1,7 @@
 package statePlay.states;
+import statePlay.util.ResultProcessor;
+import statePlay.util.ResultProcessorI;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +11,7 @@ public class ContextState implements BudgetStateI, ContextStateI{
 
     BudgetStateI currentState;
     boolean isPurchased;
+    ResultProcessorI resultProcessor=new ResultProcessor();
 
     public ContextState(){
     currentState=new BasicState();
@@ -47,17 +51,25 @@ public class ContextState implements BudgetStateI, ContextStateI{
         String item=line.substring(index+1);
         System.out.println();
         System.out.println("item: "+item);
-        new BasicState(categorizedItems);
-        new LuxuriousState(categorizedItems);
-        new Extravagant(categorizedItems);
+        initialize();
         ContextState innerState;
         innerState= (ContextState) currentState.purchaseActionPerformed(item);
         currentState=innerState.currentState;
         isPurchased=innerState.isPurchased;
+        String ifPurchasable;
+        if(isPurchased) ifPurchasable = "YES";
+        else ifPurchasable = "NO";
         System.out.println("InnerState CurrentState: "+ currentState+"InnerState Boolean Value: "+isPurchased);
         String className=getClassName(currentState);
+        String result=className+"::"+item+"--"+ifPurchasable;
+        resultProcessor.addToResultList(result);
         System.out.println("ClassName: "+className);
         return null;
+    }
+    private void initialize(){
+        new BasicState(categorizedItems);
+        new LuxuriousState(categorizedItems);
+        new ExtravagantState(categorizedItems);
     }
     private String getClassName(BudgetStateI currentState){
         if(currentState.toString().contains("BasicState"))

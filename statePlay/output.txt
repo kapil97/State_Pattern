@@ -1,0 +1,10 @@
+BASIC::cinema--NO
+BASIC::medicine--YES
+BASIC::householdItem--YES
+BASIC::medicine--YES
+BASIC::householdItem--YES
+LUXURIOUS::yacht--NO
+LUXURIOUS::vacationTrip--YES
+LUXURIOUS::medicine--YES
+LUXURIOUS::householdItem--YES
+EXTRAVAGANT::yacht--YES
