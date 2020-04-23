@@ -43,7 +43,10 @@ ant run -buildfile statePlay/src/build.xml \
 -----------------------------------------------------------------------
 ## Description:
 
-in progress
+The program first reads the base file and stores it in a data structure.<br>
+The program then reads input file and passes it to the ```Context Class``` which performs purchaseAction on the item on the current state until the input fill is empty.<br>
+After the processing, the program writes the output to the output file.<br>
+Number of Slack Days used: 2
 
 -----------------------------------------------------------------------
 ### Academic Honesty statement:
